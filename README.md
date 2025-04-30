@@ -12,7 +12,10 @@ nano config.yml # Ingresar url y token
 ## Use
 
 ```python
-from get_last_obs import getLastObs
+from get_last_obs import getLastObsList, getLastObs, updateMapState
 
-last_values = getLastObs([19, 29, 30])
+ultimo_valor = getLastObs(19)
+ultimos_valores = getLastObsList([19, 29, 30])
+mapa_actualizado = updateMapState("mapas/tramos.geojson")
+updateMapState("mapas/tramos.geojson", "mapas/tramos_actualizados.geojson") 
 ```
