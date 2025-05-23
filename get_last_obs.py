@@ -93,6 +93,8 @@ def getUltimosCaudalesGeoserver():
     return getOwsLayer(layer_name="ultimos_caudales_con_timeseries")
 
 def getState(percentil):
+    if percentil is None:
+        return ""
     if percentil not in status_categories:
         raise ValueError("Percentil %i not found in mapping table" % percentil)
     return status_categories[percentil]
@@ -100,6 +102,7 @@ def getState(percentil):
 status_categories : dict = {
     5: "aguas altas",
     25: "aguas medias altas",
+    50: "aguas medias",
     75: "aguas medias",
     95: "aguas medias bajas",
     100: "aguas bajas"
