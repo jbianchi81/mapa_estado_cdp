@@ -1,0 +1,1 @@
+ogr2ogr -f "PostgreSQL" PG:"service=mydbservice"  mapas/tramos.geojson -nln tramos_import -nlt MULTILINESTRING -lco GEOMETRY_NAME=geom
