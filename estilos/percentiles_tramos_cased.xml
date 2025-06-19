@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld:StyledLayerDescriptor version="1.0.0"
+    xmlns="http://www.opengis.net/sld"
+    xmlns:sld="http://www.opengis.net/sld"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
+    <sld:NamedLayer>
+        <sld:Name>categorized_lines</sld:Name>
+        <sld:UserStyle>
+            <sld:Title>Line Categorization by Value</sld:Title>
+            <FeatureTypeStyle>
+                <!-- borde gris -->
+                <Rule>
+                    <LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <Stroke>
+                            <CssParameter name="stroke">#333333</CssParameter>
+                            <CssParameter name="stroke-width">5</CssParameter>
+                            <CssParameter name="stroke-linecap">round</CssParameter>
+                        </Stroke>
+                    </LineSymbolizer>
+                </Rule>
+            </FeatureTypeStyle>
+            <sld:FeatureTypeStyle>
+                <!-- relleno -->
+                <!-- 0–5 -->
+                <sld:Rule>
+                    <sld:Title>≤ 5</sld:Title>
+                    <ogc:Filter>
+                        <ogc:PropertyIsLessThanOrEqualTo>
+                            <ogc:PropertyName>percentil</ogc:PropertyName>
+                            <ogc:Literal>5</ogc:Literal>
+                        </ogc:PropertyIsLessThanOrEqualTo>
+                    </ogc:Filter>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <sld:Stroke>
+                            <sld:CssParameter name="stroke">#6fa8dc</sld:CssParameter>
+                            <sld:CssParameter name="stroke-width">3</sld:CssParameter>
+                            <sld:CssParameter name="stroke-linejoin">round</sld:CssParameter> <!-- no
+                            sharp joins -->
+                            <sld:CssParameter name="stroke-linecap">round</sld:CssParameter>  <!-- no
+                            protruding ends -->
+                        </sld:Stroke>
+                    </sld:LineSymbolizer>
+                </sld:Rule>
+
+                <!-- >5 – ≤25 -->
+                <sld:Rule>
+                    <sld:Title>5–25</sld:Title>
+                    <ogc:Filter>
+                        <ogc:And>
+                            <ogc:PropertyIsGreaterThan>
+                                <ogc:PropertyName>percentil</ogc:PropertyName>
+                                <ogc:Literal>5</ogc:Literal>
+                            </ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyIsLessThanOrEqualTo>
+                                <ogc:PropertyName>percentil</ogc:PropertyName>
+                                <ogc:Literal>25</ogc:Literal>
+                            </ogc:PropertyIsLessThanOrEqualTo>
+                        </ogc:And>
+                    </ogc:Filter>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <sld:Stroke>
+                            <sld:CssParameter name="stroke">#cfe2f3</sld:CssParameter>
+                            <sld:CssParameter name="stroke-width">3</sld:CssParameter>
+                            <sld:CssParameter name="stroke-linejoin">round</sld:CssParameter> <!-- no
+                            sharp joins -->
+                            <sld:CssParameter name="stroke-linecap">round</sld:CssParameter>  <!-- no
+                            protruding ends -->
+                        </sld:Stroke>
+                    </sld:LineSymbolizer>
+                </sld:Rule>
+
+                <!-- >25 – ≤75 -->
+                <sld:Rule>
+                    <sld:Title>25–75</sld:Title>
+                    <ogc:Filter>
+                        <ogc:And>
+                            <ogc:PropertyIsGreaterThan>
+                                <ogc:PropertyName>percentil</ogc:PropertyName>
+                                <ogc:Literal>25</ogc:Literal>
+                            </ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyIsLessThanOrEqualTo>
+                                <ogc:PropertyName>percentil</ogc:PropertyName>
+                                <ogc:Literal>75</ogc:Literal>
+                            </ogc:PropertyIsLessThanOrEqualTo>
+                        </ogc:And>
+                    </ogc:Filter>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <sld:Stroke>
+                            <sld:CssParameter name="stroke">#fff2cc</sld:CssParameter>
+                            <sld:CssParameter name="stroke-width">3</sld:CssParameter>
+                            <sld:CssParameter name="stroke-linejoin">round</sld:CssParameter> <!-- no
+                            sharp joins -->
+                            <sld:CssParameter name="stroke-linecap">round</sld:CssParameter>  <!-- no
+                            protruding ends -->
+                        </sld:Stroke>
+                    </sld:LineSymbolizer>
+                </sld:Rule>
+
+                <!-- >75 – ≤95 -->
+                <sld:Rule>
+                    <sld:Title>75–95</sld:Title>
+                    <ogc:Filter>
+                        <ogc:And>
+                            <ogc:PropertyIsGreaterThan>
+                                <ogc:PropertyName>percentil</ogc:PropertyName>
+                                <ogc:Literal>75</ogc:Literal>
+                            </ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyIsLessThanOrEqualTo>
+                                <ogc:PropertyName>percentil</ogc:PropertyName>
+                                <ogc:Literal>95</ogc:Literal>
+                            </ogc:PropertyIsLessThanOrEqualTo>
+                        </ogc:And>
+                    </ogc:Filter>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <sld:Stroke>
+                            <sld:CssParameter name="stroke">#f6b26b</sld:CssParameter>
+                            <sld:CssParameter name="stroke-width">3</sld:CssParameter>
+                            <sld:CssParameter name="stroke-linejoin">round</sld:CssParameter> <!-- no
+                            sharp joins -->
+                            <sld:CssParameter name="stroke-linecap">round</sld:CssParameter>  <!-- no
+                            protruding ends -->
+                        </sld:Stroke>
+                    </sld:LineSymbolizer>
+                </sld:Rule>
+
+                <!-- >95 -->
+                <sld:Rule>
+                    <sld:Title>> 95</sld:Title>
+                    <ogc:Filter>
+                        <ogc:PropertyIsGreaterThan>
+                            <ogc:PropertyName>percentil</ogc:PropertyName>
+                            <ogc:Literal>95</ogc:Literal>
+                        </ogc:PropertyIsGreaterThan>
+                    </ogc:Filter>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <sld:Stroke>
+                            <sld:CssParameter name="stroke">#ea9999</sld:CssParameter>
+                            <sld:CssParameter name="stroke-width">3</sld:CssParameter>
+                            <sld:CssParameter name="stroke-linejoin">round</sld:CssParameter> <!-- no
+                            sharp joins -->
+                            <sld:CssParameter name="stroke-linecap">round</sld:CssParameter>  <!-- no
+                            protruding ends -->
+                        </sld:Stroke>
+                    </sld:LineSymbolizer>
+                </sld:Rule>
+
+            </sld:FeatureTypeStyle>
+        </sld:UserStyle>
+    </sld:NamedLayer>
+</sld:StyledLayerDescriptor>
