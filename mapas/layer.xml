@@ -1,0 +1,364 @@
+<featureType>
+  <name>tramos_condicion_params</name>
+  <nativeName>tramos_condicion_params</nativeName>
+  <namespace>
+    <name>public2</name>
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="alternate" href="http://localhost:8080/geoserver/rest/namespaces/public2.xml" type="application/xml"/>
+  </namespace>
+  <title>tramos_condicion_params</title>
+  <keywords>
+    <string>features</string>
+    <string>tramos_condicion_params</string>
+  </keywords>
+  <nativeCRS>GEOGCS[&quot;WGS 84&quot;, 
+  DATUM[&quot;World Geodetic System 1984&quot;, 
+    SPHEROID[&quot;WGS 84&quot;, 6378137.0, 298.257223563, AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]], 
+    AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]], 
+  PRIMEM[&quot;Greenwich&quot;, 0.0, AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]], 
+  UNIT[&quot;degree&quot;, 0.017453292519943295], 
+  AXIS[&quot;Geodetic longitude&quot;, EAST], 
+  AXIS[&quot;Geodetic latitude&quot;, NORTH], 
+  AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]</nativeCRS>
+  <srs>EPSG:4326</srs>
+  <nativeBoundingBox>
+    <minx>-60.776184082</minx>
+    <maxx>-53.833953857</maxx>
+    <miny>-34.039774853</miny>
+    <maxy>-25.5833333333333</maxy>
+    <crs>EPSG:4326</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-60.776184082</minx>
+    <maxx>-53.833953857</maxx>
+    <miny>-34.039774853</miny>
+    <maxy>-25.5833333333333</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>tramos_condicion_params</name>
+        <sql>WITH alturas_last AS (&#xd;
+         SELECT series.estacion_id AS unid,&#xd;
+            observaciones.timestart,&#xd;
+            series.id AS series_id,&#xd;
+            series.var_id,&#xd;
+            valores_num.valor&#xd;
+           FROM redes &#xd;
+           JOIN estaciones on estaciones.tabla = redes.tabla_id&#xd;
+           JOIN series on series.estacion_id = estaciones.unid&#xd;
+           JOIN observaciones on observaciones.series_id = series.id&#xd;
+           JOIN valores_num on valores_num.obs_id = observaciones.id&#xd;
+           JOIN tramos on tramos.unid = estaciones.unid&#xd;
+          WHERE series.var_id = 2 AND series.proc_id = 1 AND series.unit_id = 11 &#xd;
+          AND observaciones.timestart &gt;= case when &apos;%timestart%&apos;=&apos;1800-01-01&apos; &#xd;
+                                        then current_timestamp-&apos;7 days&apos;::interval&#xd;
+                                        else &apos;%timestart%&apos;::timestamp end&#xd;
+	        AND observaciones.timeend &lt;= case when &apos;%timeend%&apos; = &apos;1800-01-01&apos; &#xd;
+	                                  then current_timestamp&#xd;
+	                                  else &apos;%timeend%&apos;::timestamp end&#xd;
+	        AND redes.id= CASE WHEN %redId%!=0 THEN %redId% ELSE redes.id END &#xd;
+	        AND estaciones.tipo= CASE WHEN &apos;%tipo%&apos; != &apos;X&apos; THEN &apos;%tipo%&apos; else estaciones.tipo END&#xd;
+          AND tramos.nombre is not NULL&#xd;
+        ), caudales_last AS (&#xd;
+         SELECT series.estacion_id AS unid,&#xd;
+            observaciones.timestart,&#xd;
+            series.id AS series_id,&#xd;
+            series.var_id,&#xd;
+            valores_num.valor&#xd;
+           FROM redes &#xd;
+           JOIN estaciones on estaciones.tabla = redes.tabla_id&#xd;
+           JOIN series on series.estacion_id = estaciones.unid&#xd;
+           JOIN observaciones on observaciones.series_id = series.id&#xd;
+           JOIN valores_num on valores_num.obs_id = observaciones.id&#xd;
+           JOIN tramos on tramos.unid = estaciones.unid&#xd;
+          WHERE series.var_id = 4 AND series.proc_id in (1,2) AND series.unit_id = 10 &#xd;
+            AND observaciones.timestart &gt;= case when &apos;%timestart%&apos;=&apos;1800-01-01&apos; &#xd;
+                                        then current_timestamp-&apos;7 days&apos;::interval&#xd;
+                                        else &apos;%timestart%&apos;::timestamp end&#xd;
+	        AND observaciones.timeend &lt;= case when &apos;%timeend%&apos; = &apos;1800-01-01&apos; &#xd;
+	                                  then current_timestamp&#xd;
+	                                  else &apos;%timeend%&apos;::timestamp end&#xd;
+	        AND redes.id= CASE WHEN %redId%!=0 THEN %redId% ELSE redes.id END &#xd;
+	        AND estaciones.tipo= CASE WHEN &apos;%tipo%&apos; != &apos;X&apos; THEN &apos;%tipo%&apos; else estaciones.tipo END&#xd;
+          AND tramos.nombre is not NULL&#xd;
+        ),&#xd;
+        last as (&#xd;
+          select *  from alturas_last&#xd;
+          union ALL&#xd;
+          select * from caudales_last&#xd;
+        ),&#xd;
+        ult AS (&#xd;
+          SELECT last.unid,&#xd;
+            max(last.timestart) AS date,&#xd;
+            last.series_id,&#xd;
+            last.var_id,&#xd;
+            array_agg(array[to_char(timestart::timestamptz at time zone &apos;UTC&apos;,&apos;YYYY-MM-DD&quot;T&quot;HH24:MI:SS.MS&quot;Z&quot;&apos;),round(valor::numeric,2)::text] order by timestart) AS timeseries,&#xd;
+            to_char(min(timestart::timestamptz at time zone &apos;UTC&apos;),&apos;YYYY-MM-DD&quot;T&quot;HH24:MI:SS.MS&quot;Z&quot;&apos;) timestart,&#xd;
+            to_char(max(timestart::timestamptz at time zone &apos;UTC&apos;),&apos;YYYY-MM-DD&quot;T&quot;HH24:MI:SS.MS&quot;Z&quot;&apos;) timeend&#xd;
+           FROM last&#xd;
+          WHERE last.valor IS NOT NULL&#xd;
+          AND last.valor != &apos;NaN&apos;&#xd;
+          GROUP BY last.unid, last.series_id, last.var_id&#xd;
+        ), ult_v AS (&#xd;
+         SELECT ult_1.unid,&#xd;
+            ult_1.series_id,&#xd;
+            ult_1.var_id,&#xd;
+            ult_1.date,&#xd;
+            last.valor&#xd;
+           FROM ult ult_1&#xd;
+           JOIN last ON ult_1.series_id = last.series_id &#xd;
+           AND last.timestart = ult_1.date&#xd;
+        ), v AS (&#xd;
+         SELECT ult_v.unid,&#xd;
+            ult_v.series_id,&#xd;
+            ult_v.var_id,&#xd;
+            ult_v.date,&#xd;
+            ult_v.valor,&#xd;
+            round(avg(last.valor)::numeric, 2) AS valor_precedente&#xd;
+           FROM ult_v&#xd;
+             LEFT JOIN last &#xd;
+             ON ult_v.series_id = last.series_id&#xd;
+             AND last.timestart &lt;= (ult_v.date - &apos;1 day&apos;::interval) &#xd;
+             AND last.timestart &gt; (ult_v.date - &apos;2 days&apos;::interval)&#xd;
+          GROUP BY ult_v.unid, ult_v.series_id, ult_v.var_id, ult_v.date, ult_v.valor&#xd;
+        ),&#xd;
+        percentiles AS (&#xd;
+            SELECT *&#xd;
+            FROM series_percentiles_ref&#xd;
+            UNION ALL (&#xd;
+                SELECT&#xd;
+                    series_id,&#xd;
+                    100,&#xd;
+                    &apos;-Infinity&apos;::float8&#xd;
+                FROM series_percentiles_ref &#xd;
+                WHERE percentil=5)&#xd;
+        ),&#xd;
+        percentiles_dict AS (&#xd;
+          SELECT &#xd;
+              series_percentiles_ref.series_id,&#xd;
+              jsonb_object_agg(series_percentiles_ref.percentil, series_percentiles_ref.valor) AS percentiles&#xd;
+          FROM series_percentiles_ref&#xd;
+          JOIN last ON last.series_id=series_percentiles_ref.series_id&#xd;
+          GROUP BY series_percentiles_ref.series_id&#xd;
+        )&#xd;
+ SELECT DISTINCT ON (estaciones.tabla, v.unid, v.series_id)&#xd;
+    v.unid,&#xd;
+    timezone(&apos;ART&apos;::text, v.date) AS fecha,&#xd;
+    v.valor,&#xd;
+    v.valor_precedente,&#xd;
+    CASE&#xd;
+        WHEN round(v.valor::numeric, 2) &gt; round(v.valor_precedente, 2) THEN &apos;crece&apos;::text&#xd;
+        WHEN round(v.valor::numeric, 2) = round(v.valor_precedente, 2) THEN &apos;permanece&apos;::text&#xd;
+        ELSE &apos;baja&apos;::text&#xd;
+    END AS tendencia,&#xd;
+    tramos.nombre,&#xd;
+    estaciones.tabla,&#xd;
+    estaciones.geom,&#xd;
+    tramos.geom as geom_tramo,&#xd;
+    estaciones.cero_ign,&#xd;
+    v.series_id,&#xd;
+    v.var_id,&#xd;
+    ult.timeseries AS timeseries,&#xd;
+    ult.timestart,&#xd;
+    ult.timeend,&#xd;
+    estaciones.rio,&#xd;
+    percentiles.percentil,&#xd;
+    case &#xd;
+        when percentiles.percentil = 100 then &apos;aguas bajas&apos;&#xd;
+        when percentiles.percentil = 95 then &apos;aguas medias bajas&apos;&#xd;
+        when percentiles.percentil = 75 then &apos;aguas medias&apos;&#xd;
+        when percentiles.percentil = 25 then &apos;aguas medias altas&apos;&#xd;
+        when percentiles.percentil = 5 then &apos;aguas altas&apos;&#xd;
+        else NULL&#xd;
+    end AS condicion,&#xd;
+    percentiles_dict.percentiles&#xd;
+   FROM v&#xd;
+   JOIN estaciones ON (v.unid = estaciones.unid)&#xd;
+   JOIN ult ON (v.series_id = ult.series_id)&#xd;
+   JOIN tramos ON (tramos.unid=v.unid)&#xd;
+   LEFT JOIN percentiles ON (percentiles.series_id=ult.series_id AND v.valor &gt;= percentiles.valor)&#xd;
+   LEFT JOIN percentiles_dict ON percentiles_dict.series_id = v.series_id&#xd;
+  ORDER BY estaciones.tabla asc, v.unid asc, v.series_id asc, percentiles.valor desc
+</sql>
+        <escapeSql>false</escapeSql>
+        <geometry>
+          <name>geom_tramo</name>
+          <type>MultiLineString</type>
+          <srid>4326</srid>
+        </geometry>
+        <geometry>
+          <name>geom</name>
+          <type>Point</type>
+          <srid>4326</srid>
+        </geometry>
+        <parameter>
+          <name>timeend</name>
+          <defaultValue>1800-01-01</defaultValue>
+          <regexpValidator>^[\w\d\s\-]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>tipo</name>
+          <defaultValue>X</defaultValue>
+          <regexpValidator>^[\w\d\s]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>redId</name>
+          <defaultValue>0</defaultValue>
+          <regexpValidator>^[\w\d\s]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>timestart</name>
+          <defaultValue>1800-01-01</defaultValue>
+          <regexpValidator>^[\w\d\s\-]+$</regexpValidator>
+        </parameter>
+      </virtualTable>
+    </entry>
+    <entry key="cachingEnabled">false</entry>
+  </metadata>
+  <store class="dataStore">
+    <name>public2:meteorology</name>
+    <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="alternate" href="http://localhost:8080/geoserver/rest/workspaces/public2/datastores/meteorology.xml" type="application/xml"/>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <simpleConversionEnabled>false</simpleConversionEnabled>
+  <internationalTitle/>
+  <internationalAbstract/>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+  <attributes>
+    <attribute>
+      <name>unid</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Integer</binding>
+    </attribute>
+    <attribute>
+      <name>fecha</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.sql.Timestamp</binding>
+    </attribute>
+    <attribute>
+      <name>valor</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Float</binding>
+    </attribute>
+    <attribute>
+      <name>valor_precedente</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.math.BigDecimal</binding>
+    </attribute>
+    <attribute>
+      <name>tendencia</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>nombre</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>tabla</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>geom</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>org.locationtech.jts.geom.Point</binding>
+    </attribute>
+    <attribute>
+      <name>geom_tramo</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>org.locationtech.jts.geom.MultiLineString</binding>
+    </attribute>
+    <attribute>
+      <name>cero_ign</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Float</binding>
+    </attribute>
+    <attribute>
+      <name>series_id</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Integer</binding>
+    </attribute>
+    <attribute>
+      <name>var_id</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Integer</binding>
+    </attribute>
+    <attribute>
+      <name>timestart</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>timeend</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>rio</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>percentil</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.Integer</binding>
+    </attribute>
+    <attribute>
+      <name>condicion</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+    <attribute>
+      <name>percentiles</name>
+      <minOccurs>0</minOccurs>
+      <maxOccurs>1</maxOccurs>
+      <nillable>true</nillable>
+      <binding>java.lang.String</binding>
+    </attribute>
+  </attributes>
+</featureType>
