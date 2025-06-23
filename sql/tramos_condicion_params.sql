@@ -3,10 +3,12 @@ WITH alturas_last AS (
             observaciones.timestart,
             series.id AS series_id,
             series.var_id,
+            var.nombre as var_nombre,
             valores_num.valor
            FROM redes 
            JOIN estaciones on estaciones.tabla = redes.tabla_id
            JOIN series on series.estacion_id = estaciones.unid
+           JOIN var on series.var_id = var.id
            JOIN observaciones on observaciones.series_id = series.id
            JOIN valores_num on valores_num.obs_id = observaciones.id
            JOIN tramos on tramos.unid = estaciones.unid
@@ -25,10 +27,12 @@ WITH alturas_last AS (
             observaciones.timestart,
             series.id AS series_id,
             series.var_id,
+            var.nombre as var_nombre,
             valores_num.valor
            FROM redes 
            JOIN estaciones on estaciones.tabla = redes.tabla_id
            JOIN series on series.estacion_id = estaciones.unid
+           JOIN var on series.var_id = var.id
            JOIN observaciones on observaciones.series_id = series.id
            JOIN valores_num on valores_num.obs_id = observaciones.id
            JOIN tramos on tramos.unid = estaciones.unid
@@ -53,17 +57,19 @@ WITH alturas_last AS (
             max(last.timestart) AS date,
             last.series_id,
             last.var_id,
+            last.var_nombre,
             array_agg(array[to_char(timestart::timestamptz at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),round(valor::numeric,2)::text] order by timestart) AS timeseries,
             to_char(min(timestart::timestamptz at time zone 'UTC'),'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') timestart,
             to_char(max(timestart::timestamptz at time zone 'UTC'),'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') timeend
            FROM last
           WHERE last.valor IS NOT NULL
           AND last.valor != 'NaN'
-          GROUP BY last.unid, last.series_id, last.var_id
+          GROUP BY last.unid, last.series_id, last.var_id, last.var_nombre
         ), ult_v AS (
          SELECT ult_1.unid,
             ult_1.series_id,
             ult_1.var_id,
+            ult_1.var_nombre,
             ult_1.date,
             last.valor
            FROM ult ult_1
@@ -73,6 +79,7 @@ WITH alturas_last AS (
          SELECT ult_v.unid,
             ult_v.series_id,
             ult_v.var_id,
+            ult_v.var_nombre,
             ult_v.date,
             ult_v.valor,
             round(avg(last.valor)::numeric, 2) AS valor_precedente
@@ -81,7 +88,7 @@ WITH alturas_last AS (
              ON ult_v.series_id = last.series_id
              AND last.timestart <= (ult_v.date - '1 day'::interval) 
              AND last.timestart > (ult_v.date - '2 days'::interval)
-          GROUP BY ult_v.unid, ult_v.series_id, ult_v.var_id, ult_v.date, ult_v.valor
+          GROUP BY ult_v.unid, ult_v.series_id, ult_v.var_id, ult_v.var_nombre, ult_v.date, ult_v.valor
         ),
         percentiles AS (
             SELECT *
@@ -119,6 +126,7 @@ WITH alturas_last AS (
     estaciones.cero_ign,
     v.series_id,
     v.var_id,
+    v.var_nombre as variable,
     ult.timeseries AS timeseries,
     ult.timestart,
     ult.timeend,

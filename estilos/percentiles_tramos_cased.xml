@@ -29,7 +29,7 @@
                 <!-- relleno -->
                 <!-- 0–5 -->
                 <sld:Rule>
-                    <sld:Title>≤ 5</sld:Title>
+                    <sld:Title>≤ 5 - aguas altas</sld:Title>
                     <ogc:Filter>
                         <ogc:PropertyIsLessThanOrEqualTo>
                             <ogc:PropertyName>percentil</ogc:PropertyName>
@@ -53,7 +53,7 @@
 
                 <!-- >5 – ≤25 -->
                 <sld:Rule>
-                    <sld:Title>5–25</sld:Title>
+                    <sld:Title>5–25 - aguas medias altas</sld:Title>
                     <ogc:Filter>
                         <ogc:And>
                             <ogc:PropertyIsGreaterThan>
@@ -83,7 +83,7 @@
 
                 <!-- >25 – ≤75 -->
                 <sld:Rule>
-                    <sld:Title>25–75</sld:Title>
+                    <sld:Title>25–75 - aguas medias</sld:Title>
                     <ogc:Filter>
                         <ogc:And>
                             <ogc:PropertyIsGreaterThan>
@@ -113,7 +113,7 @@
 
                 <!-- >75 – ≤95 -->
                 <sld:Rule>
-                    <sld:Title>75–95</sld:Title>
+                    <sld:Title>75–95 - aguas medias bajas</sld:Title>
                     <ogc:Filter>
                         <ogc:And>
                             <ogc:PropertyIsGreaterThan>
@@ -143,7 +143,7 @@
 
                 <!-- >95 -->
                 <sld:Rule>
-                    <sld:Title>> 95</sld:Title>
+                    <sld:Title>> 95 - aguas bajas</sld:Title>
                     <ogc:Filter>
                         <ogc:PropertyIsGreaterThan>
                             <ogc:PropertyName>percentil</ogc:PropertyName>
