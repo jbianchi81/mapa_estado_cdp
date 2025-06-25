@@ -10,21 +10,6 @@
         <sld:Name>categorized_lines</sld:Name>
         <sld:UserStyle>
             <sld:Title>Line Categorization by Value</sld:Title>
-            <FeatureTypeStyle>
-                <!-- borde gris -->
-                <Rule>
-                    <LineSymbolizer>
-                        <sld:Geometry>
-                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
-                        </sld:Geometry>
-                        <Stroke>
-                            <CssParameter name="stroke">#333333</CssParameter>
-                            <CssParameter name="stroke-width">5</CssParameter>
-                            <CssParameter name="stroke-linecap">round</CssParameter>
-                        </Stroke>
-                    </LineSymbolizer>
-                </Rule>
-            </FeatureTypeStyle>
             <sld:FeatureTypeStyle>
                 <!-- relleno -->
                 <!-- 0–5 -->
@@ -36,6 +21,16 @@
                             <ogc:Literal>5</ogc:Literal>
                         </ogc:PropertyIsLessThanOrEqualTo>
                     </ogc:Filter>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <Stroke>
+                            <CssParameter name="stroke">#333333</CssParameter>
+                            <CssParameter name="stroke-width">5</CssParameter>
+                            <CssParameter name="stroke-linecap">round</CssParameter>
+                        </Stroke>
+                    </sld:LineSymbolizer>
                     <sld:LineSymbolizer>
                         <sld:Geometry>
                             <ogc:PropertyName>geom_tramo</ogc:PropertyName>
@@ -70,6 +65,16 @@
                         <sld:Geometry>
                             <ogc:PropertyName>geom_tramo</ogc:PropertyName>
                         </sld:Geometry>
+                        <Stroke>
+                            <CssParameter name="stroke">#333333</CssParameter>
+                            <CssParameter name="stroke-width">5</CssParameter>
+                            <CssParameter name="stroke-linecap">round</CssParameter>
+                        </Stroke>
+                    </sld:LineSymbolizer>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
                         <sld:Stroke>
                             <sld:CssParameter name="stroke">#cfe2f3</sld:CssParameter>
                             <sld:CssParameter name="stroke-width">3</sld:CssParameter>
@@ -96,6 +101,16 @@
                             </ogc:PropertyIsLessThanOrEqualTo>
                         </ogc:And>
                     </ogc:Filter>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <Stroke>
+                            <CssParameter name="stroke">#333333</CssParameter>
+                            <CssParameter name="stroke-width">5</CssParameter>
+                            <CssParameter name="stroke-linecap">round</CssParameter>
+                        </Stroke>
+                    </sld:LineSymbolizer>
                     <sld:LineSymbolizer>
                         <sld:Geometry>
                             <ogc:PropertyName>geom_tramo</ogc:PropertyName>
@@ -130,6 +145,16 @@
                         <sld:Geometry>
                             <ogc:PropertyName>geom_tramo</ogc:PropertyName>
                         </sld:Geometry>
+                        <Stroke>
+                            <CssParameter name="stroke">#333333</CssParameter>
+                            <CssParameter name="stroke-width">5</CssParameter>
+                            <CssParameter name="stroke-linecap">round</CssParameter>
+                        </Stroke>
+                    </sld:LineSymbolizer>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
                         <sld:Stroke>
                             <sld:CssParameter name="stroke">#f6b26b</sld:CssParameter>
                             <sld:CssParameter name="stroke-width">3</sld:CssParameter>
@@ -150,6 +175,16 @@
                             <ogc:Literal>95</ogc:Literal>
                         </ogc:PropertyIsGreaterThan>
                     </ogc:Filter>
+                    <sld:LineSymbolizer>
+                        <sld:Geometry>
+                            <ogc:PropertyName>geom_tramo</ogc:PropertyName>
+                        </sld:Geometry>
+                        <Stroke>
+                            <CssParameter name="stroke">#333333</CssParameter>
+                            <CssParameter name="stroke-width">5</CssParameter>
+                            <CssParameter name="stroke-linecap">round</CssParameter>
+                        </Stroke>
+                    </sld:LineSymbolizer>
                     <sld:LineSymbolizer>
                         <sld:Geometry>
                             <ogc:PropertyName>geom_tramo</ogc:PropertyName>
